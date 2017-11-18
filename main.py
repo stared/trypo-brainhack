@@ -40,8 +40,8 @@ model.compile(optimizer='adam',
 model_summary(model)
 
 X_test, y_test = load_Xy(base_path + "valid/")
-X_test = np.append(X_test[::2], X_test[1::2])
-y_test = np.append(y_test[::2], y_test[1::2])
+X_test = np.append(X_test[::2], X_test[1::2], axis=0)
+y_test = np.append(y_test[::2], y_test[1::2], axis=0)
 
 X_train, y_train = load_Xy(base_path + "train/")
 Y_train = utils.to_categorical(y_train, 2)
