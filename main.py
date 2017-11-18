@@ -5,10 +5,13 @@ import numpy as np
 import keras
 from keras.models import Sequential
 from keras.layers import Flatten, Conv2D, Dense, MaxPool2D
+
+from helpers import NeptuneCallback
+
 from deepsense import neptune
 
 ctx = neptune.Context()
-ctx.integrate_with_keras()
+# ctx.integrate_with_keras()
 
 base_path = "../input/tryponet_set2.tar.gz/tryponet_set2/"
 
@@ -54,4 +57,5 @@ model.fit(X_train, y_train,
       epochs=10,
       batch_size=32,
       validation_data=(X_test, y_test),
-      verbose=2)
+      verbose=2,
+      callbacks=[NeptuneCallback(X_test, y_test, images_per_epoch=20)])
