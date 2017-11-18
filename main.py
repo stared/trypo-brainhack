@@ -7,7 +7,7 @@ from glob import glob
 from matplotlib import pyplot as plt
 import numpy as np
 from PIL import Image
-from helpers import NeptuneCallback
+from helpers import NeptuneCallback, model_summary
 from deepsense import neptune
 ctx = neptune.Context()
 # ctx.integrate_with_keras()
@@ -66,6 +66,8 @@ model.add(Dense(2, activation='softmax'))
 model.compile(optimizer='adam',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
+
+model_summary(model)
 
 X_test, y_test = load_Xy(base_path + "valid/")
 X_train, y_train = load_Xy(base_path + "train/")

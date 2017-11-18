@@ -5,6 +5,12 @@ from deepsense import neptune
 
 ctx = neptune.Context()
 
+def model_summary(model):
+    print("Model created successfully.")
+    print(model.summary())
+    ctx.channel_send('n_layers', len(model.layers))
+    ctx.channel_send('n_parameters', model.count_params())
+
 def array_2d_to_image(array, autorescale=True):
     assert array.min() >= 0
     assert len(array.shape) in [2, 3]
