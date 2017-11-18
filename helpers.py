@@ -2,6 +2,8 @@ import numpy as np
 from PIL import Image
 from keras.callbacks import Callback
 from deepsense import neptune
+from glob import glob
+from matplotlib import pyplot as plt
 
 def load_Xy(path):
     filenames0 = glob(path + "norm/*.png")

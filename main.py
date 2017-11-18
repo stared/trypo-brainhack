@@ -3,8 +3,6 @@ from keras.models import Sequential
 from keras.layers import Flatten, Conv2D, Dense, MaxPool2D, GlobalAveragePooling2D
 from keras import utils
 
-from glob import glob
-from matplotlib import pyplot as plt
 import numpy as np
 from PIL import Image
 from helpers import NeptuneCallback, model_summary, load_Xy
