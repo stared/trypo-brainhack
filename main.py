@@ -7,39 +7,11 @@ from glob import glob
 from matplotlib import pyplot as plt
 import numpy as np
 from PIL import Image
-from helpers import NeptuneCallback, model_summary
+from helpers import NeptuneCallback, model_summary, load_Xy
 from deepsense import neptune
 ctx = neptune.Context()
-# ctx.integrate_with_keras()
 
 base_path = "../input/tryponet_set2.tar.gz/tryponet_set2/"
-
-def load_Xy(path):
-    filenames0 = glob(path + "norm/*.png")
-    filenames1 = glob(path + "trypo/*.png")
-    X = np.zeros((len(filenames0) + len(filenames1), 256, 256, 3))
-
-    y = np.zeros(len(filenames0) + len(filenames1))
-    y[len(filenames0):] = 1.
-
-    print(path + "norm/*.png")
-    for i, filename in enumerate(filenames0):
-        X[i] = plt.imread(filename)
-        if i % 100 == 0:
-            print(i, end=" ")
-        if i % 1000 == 0:
-            print("")
-
-    print("\n")
-    print(path + "trypo/*.png")
-    for i, filename in enumerate(filenames1):
-        X[len(filenames0) + i] = plt.imread(filename)
-        if i % 100 == 0:
-            print(i, end=" ")
-        if i % 1000 == 0:
-            print("")
-
-    return X, y
 
 model = Sequential()
 
@@ -70,6 +42,9 @@ model.compile(optimizer='adam',
 model_summary(model)
 
 X_test, y_test = load_Xy(base_path + "valid/")
+X_test = np.append(X_test[::2], X_test[1::2])
+y_test = np.append(y_test[::2], y_test[1::2])
+
 X_train, y_train = load_Xy(base_path + "train/")
 Y_train = utils.to_categorical(y_train, 2)
 Y_test = utils.to_categorical(y_test, 2)
