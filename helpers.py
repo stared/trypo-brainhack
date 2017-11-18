@@ -23,6 +23,15 @@ categories = ['norm', 'trypo']
 
 class NeptuneCallback(Callback):
     def __init__(self, x_test, y_test, images_per_epoch=-1):
+
+        try:
+            ctx.channel_reset('Log-loss training')
+            ctx.channel_reset('Log-loss validation')
+            ctx.channel_reset('Accuracy training')
+            ctx.channel_reset('Accuracy validation')
+            ctx.channel_reset('false_predictions')
+        except:
+            pass
         self.epoch_id = 0
         self.images_per_epoch = images_per_epoch
         self.x_test = x_test
@@ -38,20 +47,20 @@ class NeptuneCallback(Callback):
         ctx.channel_send('Accuracy validation', self.epoch_id, logs['val_acc'])
 
         # Predict the digits for images of the test set.
-        # validation_predictions = self.model.predict_classes(self.x_test)
-        # scores = self.model.predict(self.x_test)
+        validation_predictions = self.model.predict_classes(self.x_test)
+        scores = self.model.predict(self.x_test)
 
         # Identify the incorrectly classified images and send them to Neptune Dashboard.
-        # image_per_epoch = 0
-        # for index, (prediction, actual) in enumerate(zip(validation_predictions, self.y_test)):
-        #     if prediction != actual:
-        #         if image_per_epoch == self.images_per_epoch:
-        #             break
-        #         image_per_epoch += 1
-        #
-        #         ctx.channel_send('false_predictions', neptune.Image(
-        #             name='[{}] {} X {} V'.format(self.epoch_id, categories[prediction], categories[actual]),
-        #             description="\n".join([
-        #                 "{:5.1f}% {} {}".format(100 * score, categories[i], "!!!" if i == actual else "")
-        #                 for i, score in enumerate(scores[index])]),
-        #             data=array_2d_to_image(self.x_test[index,:,:])))
+        image_per_epoch = 0
+        for index, (prediction, actual) in enumerate(zip(validation_predictions, self.y_test.argmax(axis=1))):
+            if prediction != actual:
+                if image_per_epoch == self.images_per_epoch:
+                    break
+                image_per_epoch += 1
+
+                ctx.channel_send('false_predictions', neptune.Image(
+                    name='[{}] {} X {} V'.format(self.epoch_id, categories[prediction], categories[actual]),
+                    description="\n".join([
+                        "{:5.1f}% {} {}".format(100 * score, categories[i], "!!!" if i == actual else "")
+                        for i, score in enumerate(scores[index])]),
+                    data=array_2d_to_image(self.x_test[index,:,:])))

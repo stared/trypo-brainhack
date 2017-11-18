@@ -1,15 +1,14 @@
+import keras
+from keras.models import Sequential
+from keras.layers import Flatten, Conv2D, Dense, MaxPool2D, GlobalAveragePooling2D
+from keras import utils
+
 from glob import glob
 from matplotlib import pyplot as plt
 import numpy as np
-
-import keras
-from keras.models import Sequential
-from keras.layers import Flatten, Conv2D, Dense, MaxPool2D
-
+from PIL import Image
 from helpers import NeptuneCallback
-
 from deepsense import neptune
-
 ctx = neptune.Context()
 # ctx.integrate_with_keras()
 
@@ -42,20 +41,40 @@ def load_Xy(path):
 
     return X, y
 
-X_test, y_test = load_Xy(base_path + "valid/")
-X_train, y_train = load_Xy(base_path + "train/")
-
 model = Sequential()
-model.add(Flatten(input_shape=(256, 256, 3)))
-model.add(Dense(1, activation='sigmoid'))
+
+model.add(Conv2D(16, (3, 3), activation='relu', input_shape=(256, 256, 3)))
+model.add(MaxPool2D())
+
+model.add(Conv2D(32, (3, 3), activation='relu'))
+model.add(MaxPool2D())
+
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPool2D())
+
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPool2D())
+
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPool2D())
+
+model.add(Conv2D(64, (1, 1), activation='relu'))
+model.add(GlobalAveragePooling2D())
+
+model.add(Dense(2, activation='softmax'))
 
 model.compile(optimizer='adam',
-              loss='binary_crossentropy',
+              loss='categorical_crossentropy',
               metrics=['accuracy'])
 
-model.fit(X_train, y_train,
-      epochs=10,
+X_test, y_test = load_Xy(base_path + "valid/")
+X_train, y_train = load_Xy(base_path + "train/")
+Y_train = utils.to_categorical(y_train, 2)
+Y_test = utils.to_categorical(y_test, 2)
+
+model.fit(X_train, Y_train,
+      epochs=50,
       batch_size=32,
-      validation_data=(X_test, y_test),
+      validation_data=(X_test, Y_test),
       verbose=2,
-      callbacks=[NeptuneCallback(X_test, y_test, images_per_epoch=20)])
+      callbacks=[NeptuneCallback(X_test, Y_test, images_per_epoch=20)])
