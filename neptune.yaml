@@ -1,0 +1,8 @@
+project-key: TRY
+
+name: TrypoNet
+description: Brainhack Warsaw.
+tags: []
+
+exclude:
+  - aux
