@@ -5,7 +5,9 @@ import numpy as np
 import keras
 from keras.models import Sequential
 from keras.layers import Flatten, Conv2D, Dense, MaxPool2D
+from deepsense import neptune
 
+ctx = neptune.Context()
 ctx.integrate_with_keras()
 
 base_path = "../input/tryponet_set2.tar.gz/tryponet_set2/"
@@ -23,6 +25,8 @@ def load_Xy(path):
         X[i] = plt.imread(filename)
         if i % 100 == 0:
             print(i, end=" ")
+        if i % 1000 == 0:
+            print("")
 
     print("\n")
     print(path + "trypo/*.png")
@@ -30,6 +34,8 @@ def load_Xy(path):
         X[len(filenames0) + i] = plt.imread(filename)
         if i % 100 == 0:
             print(i, end=" ")
+        if i % 1000 == 0:
+            print("")
 
     return X, y
 
