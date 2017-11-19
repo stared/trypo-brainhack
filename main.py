@@ -1,6 +1,6 @@
 import keras
 from keras.models import Sequential
-from keras.layers import Flatten, Conv2D, Dense, MaxPool2D, GlobalAveragePooling2D
+from keras.layers import Flatten, Conv2D, Dense, MaxPool2D, GlobalAveragePooling2D, Dropout
 from keras import utils
 
 import numpy as np
@@ -27,10 +27,12 @@ model.add(MaxPool2D())
 
 model.add(Conv2D(64, (3, 3), activation='relu'))
 model.add(MaxPool2D())
+model.add(Dropout(0.25))
 
-model.add(Conv2D(64, (1, 1), activation='relu'))
+model.add(Conv2D(128, (1, 1), activation='relu'))
 model.add(GlobalAveragePooling2D())
 
+model.add(Dropout(0.5))
 model.add(Dense(2, activation='softmax'))
 
 model.compile(optimizer='adam',
