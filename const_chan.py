@@ -13,22 +13,22 @@ base_path = "../input/tryponet_set2.tar.gz/tryponet_set2/"
 
 model = Sequential()
 
-model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(256, 256, 3)))
+model.add(Conv2D(16, (3, 3), activation='relu', input_shape=(256, 256, 3)))
 model.add(MaxPool2D())
 
-model.add(Conv2D(32, (3, 3), activation='relu'))
+model.add(Conv2D(16, (3, 3), activation='relu'))
 model.add(MaxPool2D())
 
-model.add(Conv2D(32, (3, 3), activation='relu'))
+model.add(Conv2D(16, (3, 3), activation='relu'))
 model.add(MaxPool2D())
 
-model.add(Conv2D(32, (3, 3), activation='relu'))
+model.add(Conv2D(16, (3, 3), activation='relu'))
 model.add(MaxPool2D())
 
-model.add(Conv2D(32, (3, 3), activation='relu'))
+model.add(Conv2D(16, (3, 3), activation='relu'))
 model.add(MaxPool2D())
 
-model.add(Conv2D(64, (1, 1), activation='relu'))
+model.add(Conv2D(16, (1, 1), activation='relu'))
 model.add(GlobalAveragePooling2D())
 
 model.add(Dropout(0.5))
