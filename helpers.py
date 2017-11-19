@@ -52,15 +52,6 @@ categories = ['norm', 'trypo']
 
 class NeptuneCallback(Callback):
     def __init__(self, x_test, y_test, images_per_epoch=-1):
-
-        try:
-            ctx.channel_reset('Log-loss training')
-            ctx.channel_reset('Log-loss validation')
-            ctx.channel_reset('Accuracy training')
-            ctx.channel_reset('Accuracy validation')
-            ctx.channel_reset('false_predictions')
-        except:
-            pass
         self.epoch_id = 0
         self.images_per_epoch = images_per_epoch
         self.x_test = x_test
